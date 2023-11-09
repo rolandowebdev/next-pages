@@ -1,4 +1,6 @@
+import { PageContainer } from '@/components/layouts/Container/PageContainer'
+
 const AboutPage = () => {
-	return <div>AboutPage</div>
+    return <PageContainer title="About">About</PageContainer>
 }
 export default AboutPage

@@ -1,9 +1,7 @@
-import { Plus_Jakarta_Sans } from 'next/font/google'
-
-const PlusJakartaSans = Plus_Jakarta_Sans({ subsets: ['latin'] })
+import { PageContainer } from '@/components/layouts/Container/PageContainer'
 
 const Home = () => {
-	return <main className={PlusJakartaSans.className}>Hello Bro</main>
+    return <PageContainer title="Home">Hello Bro</PageContainer>
 }
 
 export default Home

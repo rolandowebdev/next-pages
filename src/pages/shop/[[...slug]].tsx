@@ -1,14 +1,17 @@
+import { PageContainer } from '@/components/layouts/Container/PageContainer'
 import { useRouter } from 'next/router'
 
 const ShopPage = () => {
-	const { query } = useRouter()
+    const { query } = useRouter()
 
-	return (
-		<div>
-			<h1>Shop Page</h1>
-			<p>Shop : {`${query.slug ? query.slug[0] + '-' + query.slug[1] : ''}`}</p>
-		</div>
-	)
+    return (
+        <PageContainer title="Shop Page">
+            <p>
+                Shop :{' '}
+                {`${query.slug ? query.slug[0] + '-' + query.slug[1] : ''}`}
+            </p>
+        </PageContainer>
+    )
 }
 
 export default ShopPage

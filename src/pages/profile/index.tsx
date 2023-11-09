@@ -1,13 +1,13 @@
+import { PageContainer } from '@/components/layouts/Container/PageContainer'
 import { useSession } from 'next-auth/react'
 
 const ProfilePage = () => {
     const { data }: any = useSession()
 
     return (
-        <div>
-            <h1>ProfilePage</h1>
+        <PageContainer title="Profile Page">
             {data && data.user?.fullname}
-        </div>
+        </PageContainer>
     )
 }
 

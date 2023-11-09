@@ -1,10 +1,11 @@
+import { PageContainer } from '@/components/layouts/Container/PageContainer'
+
 const NotFoundPage = () => {
-	return (
-		<div>
-			<h1>404</h1>
-			<p>Not Found Page</p>
-		</div>
-	)
+    return (
+        <PageContainer title="404">
+            <p>Not Found Page</p>
+        </PageContainer>
+    )
 }
 
 export default NotFoundPage

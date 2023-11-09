@@ -1,5 +1,7 @@
+import { PageContainer } from '@/components/layouts/Container/PageContainer'
+
 const SettingPage = () => {
-	return <div>SettingPage</div>
+    return <PageContainer title="Setting Page">SettingPage</PageContainer>
 }
 
 export default SettingPage
