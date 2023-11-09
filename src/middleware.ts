@@ -8,4 +8,4 @@ export function mainMiddleware() {
 }
 
 // add page route you want to redirect and run middleware
-export default withAuth(mainMiddleware, ['/profile', '/product'])
+export default withAuth(mainMiddleware, ['/', '/profile', '/product', '/admin'])

@@ -74,7 +74,7 @@ export const RegisterView = () => {
                     <input
                         type="submit"
                         disabled={isLoading}
-                        value={`${isLoading ? 'Loading...' : 'Submit'} `}
+                        value={`${isLoading ? 'Loading...' : 'Register'} `}
                         className="w-full cursor-pointer rounded-sm bg-slate-950 py-2 hover:bg-black"
                     />
                 </form>

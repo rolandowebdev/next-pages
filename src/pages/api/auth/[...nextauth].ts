@@ -1,3 +1,5 @@
+import { signIn } from '@/lib/firebase/service'
+import { compare } from 'bcrypt'
 import { NextAuthOptions } from 'next-auth'
 import NextAuth from 'next-auth/next'
 import CredentialsProvider from 'next-auth/providers/credentials'
@@ -10,52 +12,45 @@ const authOptions: NextAuthOptions = {
             type: 'credentials',
             name: 'Credentials',
             credentials: {
-                email: { label: 'Email', type: 'text' },
-                fullname: { label: 'Fullname', type: 'text' },
+                email: { label: 'Email', type: 'email' },
                 password: { label: 'Password', type: 'password' },
             },
             async authorize(credentials) {
-                const { email, fullname, password } = credentials as {
+                const { email, password } = credentials as {
                     email: string
-                    fullname: string
                     password: string
                 }
 
-                const user: any = {
-                    id: 1,
-                    email,
-                    fullname,
-                    password,
-                }
+                const user: any = await signIn({ email })
+                const passwordMatch = await compare(password, user.password)
 
-                if (!user) return
+                if (!user) return null
+                if (!passwordMatch) return null
 
                 return user
             },
         }),
     ],
     callbacks: {
-        jwt({ token, account, profile, user }: any) {
+        jwt({ token, account, user }: any) {
             if (account?.provider === 'credentials') {
                 token.email = user.email
                 token.fullname = user.fullname
+                token.role = user.role
             }
 
             return token
         },
 
         async session({ session, token }: any) {
-            if ('email' in token) {
-                session.user.email = token.email
-            }
-
-            if ('fullname' in token) {
-                session.user.fullname = token.fullname
-            }
+            if ('email' in token) session.user.email = token.email
+            if ('fullname' in token) session.user.fullname = token.fullname
+            if ('role' in token) session.user.role = token.role
 
             return session
         },
     },
+    pages: { signIn: '/auth/login' },
 }
 
 export default NextAuth(authOptions)

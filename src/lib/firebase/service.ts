@@ -11,7 +11,7 @@ import {
 } from 'firebase/firestore'
 import { Product } from '@/types/product'
 import { Role, SignUp } from '@/types/authUser'
-import bcrypt from 'bcrypt'
+import { hash } from 'bcrypt'
 
 const firestore = getFirestore(app)
 
@@ -36,6 +36,26 @@ export const getProductById = async (id: string): Promise<Product> => {
     return data as Product
 }
 
+export const signIn = async (userData: { email: string }) => {
+    const q = query(
+        collection(firestore, 'users'),
+        where('email', '==', userData.email)
+    )
+
+    const snapshot = await getDocs(q)
+
+    const data = snapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(), // make sure to invoked every ...doc.data()
+    }))
+
+    if (data.length > 0) {
+        return data[0]
+    } else {
+        return null
+    }
+}
+
 export const signUp = async (
     userData: SignUp,
     callback: Function
@@ -49,13 +69,14 @@ export const signUp = async (
 
     const data = snapshot.docs.map((doc) => ({
         id: doc.id,
-        ...doc.data,
+        ...doc.data(),
     }))
 
     if (data.length > 0) {
+        console.log(data)
         callback({ status: false, message: 'Email already exist' })
     } else {
-        userData.password = await bcrypt.hash(userData.password, 10)
+        userData.password = await hash(userData.password, 10)
         userData.role = Role.MEMBER
 
         await addDoc(collection(firestore, 'users'), userData)
