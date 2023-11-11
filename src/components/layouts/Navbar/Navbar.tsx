@@ -1,4 +1,5 @@
 import { signIn, signOut, useSession } from 'next-auth/react'
+import Image from 'next/image'
 import Link from 'next/link'
 
 export const Navbar = () => {
@@ -10,26 +11,6 @@ export const Navbar = () => {
                 Navbar
             </Link>
             <nav className="flex items-center gap-8">
-                {/* <ul className="flex items-center gap-4">
-                    <li>
-                        <Link href="/">Home</Link>
-                    </li>
-                    <li>
-                        <Link href="/setting">Setting</Link>
-                    </li>
-                    <li>
-                        <Link href="/about">About</Link>
-                    </li>
-                    <li>
-                        <Link href="/product">Product</Link>
-                    </li>
-                    <li>
-                        <Link href="/shop">Shop</Link>
-                    </li>
-                    <li>
-                        <Link href="/profile">Profile</Link>
-                    </li>
-                </ul> */}
                 {!data?.user ? (
                     <button
                         className="rounded-md bg-violet-600 px-4 py-2 text-white"
@@ -45,7 +26,20 @@ export const Navbar = () => {
                         Sign out
                     </button>
                 )}
-                <p>{data?.user?.fullname}</p>
+                <div className="flex items-center gap-2">
+                    {data?.user?.image ? (
+                        <div className="h-8 w-8 overflow-hidden rounded-full">
+                            <Image
+                                className="h-full w-full object-cover object-center"
+                                src={data?.user?.image}
+                                alt={data?.user?.fullname}
+                                width={40}
+                                height={40}
+                            />
+                        </div>
+                    ) : null}
+                    <p>{data?.user?.fullname}</p>
+                </div>
             </nav>
         </header>
     )

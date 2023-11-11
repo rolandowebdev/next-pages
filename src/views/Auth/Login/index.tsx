@@ -66,6 +66,14 @@ export const LoginView = () => {
                         className="w-full cursor-pointer rounded-sm bg-slate-950 py-2 hover:bg-black"
                     />
                 </form>
+                <button
+                    className="mt-4 w-full cursor-pointer rounded-sm bg-slate-950 py-2 hover:bg-black"
+                    onClick={() =>
+                        signIn('google', { callbackUrl, redirect: false })
+                    }
+                >
+                    Sign in with Google
+                </button>
             </div>
             <p className="text-center">
                 Don&apos;t have an account?{' '}

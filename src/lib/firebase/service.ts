@@ -7,13 +7,27 @@ import {
     getDocs,
     getFirestore,
     query,
+    updateDoc,
     where,
 } from 'firebase/firestore'
 import { Product } from '@/types/product'
-import { Role, SignUp } from '@/types/authUser'
+import { Role, SignUp, User } from '@/types/authUser'
 import { hash } from 'bcrypt'
 
 const firestore = getFirestore(app)
+
+const checkUserExist = async (email: string) => {
+    const q = query(collection(firestore, 'users'), where('email', '==', email))
+
+    const snapshot = await getDocs(q)
+
+    const data = snapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(), // make sure to invoked every ...doc.data()
+    }))
+
+    return data
+}
 
 export const getListProduct = async (): Promise<Array<Product>> => {
     const snapshot = await getDocs(collection(firestore, 'products'))
@@ -37,17 +51,7 @@ export const getProductById = async (id: string): Promise<Product> => {
 }
 
 export const signIn = async (userData: { email: string }) => {
-    const q = query(
-        collection(firestore, 'users'),
-        where('email', '==', userData.email)
-    )
-
-    const snapshot = await getDocs(q)
-
-    const data = snapshot.docs.map((doc) => ({
-        id: doc.id,
-        ...doc.data(), // make sure to invoked every ...doc.data()
-    }))
+    const data = await checkUserExist(userData.email)
 
     if (data.length > 0) {
         return data[0]
@@ -60,17 +64,7 @@ export const signUp = async (
     userData: SignUp,
     callback: Function
 ): Promise<void> => {
-    const q = query(
-        collection(firestore, 'users'),
-        where('email', '==', userData.email)
-    )
-
-    const snapshot = await getDocs(q)
-
-    const data = snapshot.docs.map((doc) => ({
-        id: doc.id,
-        ...doc.data(),
-    }))
+    const data = await checkUserExist(userData.email)
 
     if (data.length > 0) {
         console.log(data)
@@ -85,6 +79,46 @@ export const signUp = async (
             })
             .catch((error: any) => {
                 callback({ status: false, message: error.message })
+            })
+    }
+}
+
+export const signInWithGoogle = async (userData: User, callback: Function) => {
+    const data: any = await checkUserExist(userData.email)
+
+    if (data.length > 0) {
+        userData.role = data[0].role
+
+        await updateDoc(doc(firestore, 'users', data[0].id), userData)
+            .then(() => {
+                callback({
+                    status: true,
+                    message: 'Sign in with Google success',
+                    data: userData,
+                })
+            })
+            .catch(() => {
+                callback({
+                    status: false,
+                    message: 'Sign in with Google failed',
+                })
+            })
+    } else {
+        userData.role = Role.MEMBER
+
+        await addDoc(collection(firestore, 'users'), userData)
+            .then(() => {
+                callback({
+                    status: true,
+                    message: 'Sign in with Google success',
+                    data: userData,
+                })
+            })
+            .catch(() => {
+                callback({
+                    status: false,
+                    message: 'Sign in with Google failed',
+                })
             })
     }
 }
