@@ -1,7 +1,9 @@
 import { PropsWithChildren } from 'react'
 import { useRouter } from 'next/router'
-import { Navbar } from '../Navbar/Navbar'
 import { PlusJakartaSans } from '@/lib/fonts/fonts'
+import dynamic from 'next/dynamic'
+
+const Navbar = dynamic(() => import('../Navbar/Navbar'))
 
 const disableNavbar = ['/auth/login', '/auth/register', '/404']
 

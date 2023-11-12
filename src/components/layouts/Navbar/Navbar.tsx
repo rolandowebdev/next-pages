@@ -2,7 +2,7 @@ import { signIn, signOut, useSession } from 'next-auth/react'
 import Image from 'next/image'
 import Link from 'next/link'
 
-export const Navbar = () => {
+const Navbar = () => {
     const { data }: any = useSession()
 
     return (
@@ -27,20 +27,21 @@ export const Navbar = () => {
                     </button>
                 )}
                 <div className="flex items-center gap-2">
-                    {data?.user?.image ? (
-                        <div className="h-8 w-8 overflow-hidden rounded-full">
-                            <Image
-                                className="h-full w-full object-cover object-center"
-                                src={data?.user?.image}
-                                alt={data?.user?.fullname}
-                                width={40}
-                                height={40}
-                            />
-                        </div>
-                    ) : null}
+                    <div className="h-8 w-8 overflow-hidden rounded-full">
+                        <Image
+                            className="h-full w-full object-cover object-center"
+                            src={data?.user?.image}
+                            alt={data?.user?.fullname}
+                            width={40}
+                            height={40}
+                        />
+                    </div>
+
                     <p>{data?.user?.fullname}</p>
                 </div>
             </nav>
         </header>
     )
 }
+
+export default Navbar
